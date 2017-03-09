@@ -1,4 +1,4 @@
-Datadog Agent - Omnibus Project
+Paas Agent - Omnibus Project
 ================
 
 This is an [Omnibus](https://github.com/opscode/omnibus) project to build the Datadog Agent packages.
