@@ -1,0 +1,122 @@
+#! /bin/sh
+
+INSTALL_DIR=/opt/paas-agent
+LOG_DIR=/var/log/paasinsight
+mkdir -p $LOG_DIR
+
+DISTRIBUTION=$(grep -Eo "(Debian|Ubuntu|RedHat|CentOS|openSUSE|Amazon|SUSE)" /etc/issue 2>/dev/null || uname -s)
+
+# Linux installation
+if [ "$DISTRIBUTION" != "Darwin" ]; then
+  if [ -f "/etc/debian_version" ] || [ "$DISTRIBUTION" == "Debian" ] || [ "$DISTRIBUTION" == "Ubuntu" ]; then
+    set -e
+    if [ -f "/etc/init.d/paas-agent" ]; then
+      if command -v invoke-rc.d >/dev/null 2>&1; then
+        invoke-rc.d paas-agent stop || true
+      else
+        /etc/init.d/paas-agent stop || true
+      fi
+    fi
+
+    # Since we now package our own supervisor config, we no longer want
+    # the old config to be loaded. Since supervisor automatically loads
+    # configs in conf.d, we have to delete the old config file.
+    if [ -f "/etc/supervisor/conf.d/paasagent.conf" ]; then
+      echo "Removing old configuration from system supervisord"
+      rm /etc/supervisor/conf.d/paasagent.conf
+    fi
+
+    # Previous versions of paas-agent created this file but didn't do
+    # anything with it.
+    if [ -f "/etc/paas-agent/supervisor_agent.conf" ]; then
+        rm /etc/pass-agent/supervisor_agent.conf
+    fi
+
+    # Prepare the GPG keys rotation:
+    # Add the new one to the list of trusted APT keys.
+    echo "Prepare PaasInsight Agent keys rotation"
+    echo -n "  Add the new 'PaasInsight, Inc <package@paasinsight.com>' key to the list of APT trusted keys."
+    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 382E94DE >/dev/null 2>&1 && echo " ... OK" || echo " ... failed"
+
+    #DEBHELPER#
+
+  elif [ -f "/etc/redhat-release" ] || [ -f "/etc/system-release" ] || [ "$DISTRIBUTION" == "RedHat" ] || [ "$DISTRIBUTION" == "CentOS" ] || [ "$DISTRIBUTION" == "openSUSE" ] || [ "$DISTRIBUTION" == "Amazon" ] || [ "$DISTRIBUTION" == "SUSE" ]; then
+    getent group paas-agent >/dev/null || groupadd -r paas-agent
+    getent passwd paas-agent >/dev/null || \
+      useradd -r -M -g paas-agent -d $INSTALL_DIR -s /bin/sh \
+        -c "PaasInsight Agent" paas-agent
+    # Stop the old agent before installing
+    if [ -f "/etc/init.d/paas-agent" ]; then
+      /etc/init.d/paas-agent stop || true
+    fi
+
+    # Delete all the .pyc/.pyo files in the embedded dir that are part of the old agent's package
+    if [ -f "/opt/pass-agent/embedded/.py_compiled_files.txt" ]; then
+        # (commented lines are filtered out)
+        cat /opt/paas-agent/embedded/.py_compiled_files.txt | grep -v '^#' | xargs rm -f
+    fi
+  else
+    echo "[ ${Red}FAILED ${RCol}]\tYour system is currently not supported by this script.";
+    exit 1;
+  fi
+
+  # Delete .pyc files
+  # FIXME: it shouldn't be done there, but only in prerm (see 6.6
+  # of https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html)
+  # It is also here because version < 5.4 didn't delete .pyc,
+  # so we need to be sure to clean them here (if a file is deleted for instance)
+  find $INSTALL_DIR/agent -name '*.py[co]' -type f -delete || true
+
+  # FIXME: remove when CentOS5 support is dropped (03/31/2017) or when everybody
+  # has stopped using paas-agent 5.3 (and older versions ofc)
+  rm -f $INSTALL_DIR/agent/checks/utils.py
+
+elif [ "$DISTRIBUTION" = "Darwin" ]; then
+  PASS_COMMAND="$INSTALL_DIR/bin/paas-agent"
+  CONF_DIR="$INSTALL_DIR/etc"
+  APP_DIR="/Applications/Paas Agent.app"
+
+  LOG_FILE="$LOG_DIR/preinstall.log"
+  exec > $LOG_FILE 2>&1
+
+  if [ -e "$CONF_DIR/paasinsight.conf" ]; then
+    echo "# State at the beginning"
+    echo "## Agent version"
+    grep AGENT_VERSION $INSTALL_DIR/agent/config.py || echo "No config file"
+    echo "## $INSTALL_DIR"
+    ls -al $INSTALL_DIR || echo "No agent installed"
+    echo "## $APP_DIR/Contents/Resources"
+    ls -al "$APP_DIR/Contents/Resources" || echo "No app installed"
+
+    echo '# Stop old agent'
+    $PASS_COMMAND stop || true
+    kill `ps aux | grep 'PaasInsight Agent.app' | grep -v grep  | cut -d ' ' -f 4` || true
+
+    echo '# Stop old GUI'okill `ps aux | grep 'PaasInsight Agent.app' | grep -v grep | awk '{ print $2 }'` || true
+
+    # Save old conf
+    mkdir -vp /tmp/{conf,checks}.d
+    rm -rvf /tmp/{checks,conf}.d/* /tmp/paasinsight.conf
+    cp -vf $CONF_DIR/paasinsight.conf /tmp
+    cp -vf $CONF_DIR/conf.d/*.yaml /tmp/conf.d
+    cp -vfR $CONF_DIR/checks.d/* /tmp/checks.d
+  fi
+
+  echo '# Deleting old paas-agent link'
+  rm -vf /usr/local/bin/paas-agent
+
+  echo '# Deleting old paas-agent files'
+  rm -rf $INSTALL_DIR/agent || true
+
+  # Debriefing time
+  echo "# State at the end"
+  echo "## Agent version"
+  grep AGENT_VERSION $INSTALL_DIR/agent/config.py || echo "No config file"
+  echo "## $INSTALL_DIR"
+  ls -al $INSTALL_DIR || echo "No agent installed"
+  echo "## $APP_DIR/Contents/Resources"
+  ls -al "$APP_DIR/Contents/Resources" || echo "No app installed"
+fi
+
+
+exit 0
