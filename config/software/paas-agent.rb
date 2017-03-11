@@ -24,13 +24,13 @@ build do
   #这里要修改，证书
   # Agent code
   mkdir  "#{install_dir}/agent/"
-  copy 'checks.d', "#{install_dir}/agent/"
-  copy 'checks', "#{install_dir}/agent/"
-  copy 'dogstream', "#{install_dir}/agent/"
+  copy '/root/paas-agent/checks.d', "#{install_dir}/agent/"
+  copy '/root/paas-agent/checks', "#{install_dir}/agent/"
+  copy '/root/paas-agent/dogstream', "#{install_dir}/agent/"
   #copy 'resources', "#{install_dir}/agent/"
-  copy 'utils', "#{install_dir}/agent/"
-  command "cp *.py #{install_dir}/agent/"
-  copy 'datadog-cert.pem', "#{install_dir}/agent/"
+  copy '/root/paas-agent/utils', "#{install_dir}/agent/"
+  command "cp /root/paas-agent/*.py #{install_dir}/agent/"
+  copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/"
   #这里的证书要修改
 
   mkdir "#{install_dir}/run/"
@@ -65,7 +65,7 @@ build do
       copy '/root/paas-agent/packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
     end
     copy '/root/paas-agent/paasinsight.conf.example', '/etc/paas-agent/paasinsight.conf.example'
-    copy 'conf.d', '/etc/paas-agent/'
+    copy '/root/paas-agent/conf.d', '/etc/paas-agent/'
     mkdir '/etc/paas-agent/checks.d/'
     command 'chmod 755 /etc/init.d/paas-agent'
     touch '/usr/bin/paas-agent'
@@ -90,15 +90,15 @@ build do
                       ' @executable_path/../Frameworks/libpyside-python2.7.1.2.dylib '
 
     # Command line tool
-    copy 'packaging/osx/paas-agent', "#{install_dir}/bin"
+    copy '/root/paas-agent/packaging/osx/paas-agent', "#{install_dir}/bin"
     command "chmod 755 #{install_dir}/bin/paas-agent"
 
     # GUI
-    copy 'packaging/paas-agent/win32/install_files/guidata/images', "#{install_dir}/agent"
-    copy 'win32/gui.py', "#{install_dir}/agent"
-    copy 'win32/status.html', "#{install_dir}/agent"
+    copy '/root/paas-agent/packaging/paas-agent/win32/install_files/guidata/images', "#{install_dir}/agent"
+    copy '/root/paas-agent/win32/gui.py', "#{install_dir}/agent"
+    copy '/root/paas-agent/win32/status.html', "#{install_dir}/agent"
     mkdir "#{install_dir}/agent/packaging"
-    copy 'packaging/osx/app/*', "#{install_dir}/agent/packaging"
+    copy '/root/paas-agent/packaging/osx/app/*', "#{install_dir}/agent/packaging"
 
     command "cd #{install_dir}/agent && "\
             "#{install_dir}/embedded/bin/python #{install_dir}/agent/setup.py py2app"\
