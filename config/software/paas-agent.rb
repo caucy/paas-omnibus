@@ -3,12 +3,12 @@ require './lib/ostools.rb'
 name 'paas-agent'
 
 local_agent_repo = ENV['LOCAL_AGENT_REPO']
-if local_agent_repo.nil? || local_agent_repo.empty?
-  source git: 'https://github.com/whpv/dd-agent.git'
-else
+#if local_agent_repo.nil? || local_agent_repo.empty?
+ # source git: 'https://github.com/whpv/dd-agent.git'
+#else
   # For local development
   source path: ENV['LOCAL_AGENT_REPO']
-end
+#end
 
 agent_branch = ENV['AGENT_BRANCH']
 if agent_branch.nil? || agent_branch.empty?
