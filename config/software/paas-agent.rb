@@ -40,7 +40,7 @@ build do
     # Configuration files
     mkdir '/etc/paas-agent'
     if redhat?
-      copy 'packaging/centos/paas-agent.init', '/etc/rc.d/init.d/paas-agent'
+      copy '/root/paas-agent/packaging/centos/paas-agent.init', '/etc/rc.d/init.d/paas-agent'
     end
 
     if suse? || debian?
@@ -51,20 +51,20 @@ build do
         sys_type = 'suse'
         systemd_directory = '/usr/lib/systemd/system'
       end
-      copy "packaging/#{sys_type}/paas-agent.init", '/etc/init.d/paas-agent'
+      copy "/root/paas-agent/packaging/#{sys_type}/paas-agent.init", '/etc/init.d/paas-agent'
       mkdir systemd_directory
-      copy 'packaging/debian/paas-agent.service', "#{systemd_directory}/paas-agent.service"
-      copy 'packaging/debian/start_agent.sh', '/opt/paas-agent/bin/start_agent.sh'
+      copy '/root/paas-agent/packaging/debian/paas-agent.service', "#{systemd_directory}/paas-agent.service"
+      copy '/root/paas-agent/packaging/debian/start_agent.sh', '/opt/paas-agent/bin/start_agent.sh'
       command 'chmod 755 /opt/paas-agent/bin/start_agent.sh'
     end
 
     # Use a supervisor conf with go-metro on 64-bit platforms only
     if ohai['kernel']['machine'] == 'x86_64'
-      copy 'packaging/supervisor.conf', '/etc/paas-agent/supervisor.conf'
+      copy '/root/paas-agent/packaging/supervisor.conf', '/etc/paas-agent/supervisor.conf'
     else
-      copy 'packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
+      copy '/root/paas-agent/packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
     end
-    copy 'paas.conf.example', '/etc/paas-agent/paas.conf.example'
+    copy '/root/paas-agent/paasinsight.conf.example', '/etc/paas-agent/paasinsight.conf.example'
     copy 'conf.d', '/etc/paas-agent/'
     mkdir '/etc/paas-agent/checks.d/'
     command 'chmod 755 /etc/init.d/paas-agent'
