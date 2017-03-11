@@ -27,7 +27,7 @@ build do
   copy 'checks.d', "#{install_dir}/agent/"
   copy 'checks', "#{install_dir}/agent/"
   copy 'dogstream', "#{install_dir}/agent/"
-  copy 'resources', "#{install_dir}/agent/"
+  #copy 'resources', "#{install_dir}/agent/"#这个在dd-agent5.5以后版本被移除
   copy 'utils', "#{install_dir}/agent/"
   command "cp *.py #{install_dir}/agent/"
   copy 'datadog-cert.pem', "#{install_dir}/agent/"
@@ -64,7 +64,7 @@ build do
     else
       copy 'packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
     end
-    copy 'paas.conf.example', '/etc/paas-agent/paas.conf.example'
+    copy 'paasinsight.conf.example', '/etc/paasinsight-agent/paas.conf.example'
     copy 'conf.d', '/etc/paas-agent/'
     mkdir '/etc/paas-agent/checks.d/'
     command 'chmod 755 /etc/init.d/paas-agent'
