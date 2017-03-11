@@ -170,7 +170,7 @@ dependency 'scandir'
 dependency 'snakebite'
 
 # Additional software
-dependency 'datadogpy'
+#dependency 'datadogpy'
 
 # datadog-gohai and datadog-metro are built last before datadog-agent since they should always
 # be rebuilt (if put above, they would dirty the cache of the dependencies below
