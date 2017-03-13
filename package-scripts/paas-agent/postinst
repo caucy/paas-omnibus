@@ -77,7 +77,7 @@ if [ "$DISTRIBUTION" != "Darwin" ]; then
   fi
 
   # Create symlinks to the various agent's components
-  ln -sf $INSTALL_DIR/agent/agent.py /usr/bin/paas-agent
+  ln -sf $INSTALL_DIR/agent/collectord.py /usr/bin/paas-agent
   chown -R paas-agent:root /usr/bin/paas-agent
   chmod 755 /usr/bin/paas-agent
 
