@@ -24,6 +24,7 @@ build do
   #这里要修改，证书
   # Agent code
   mkdir  "#{install_dir}/agent/"
+  mkdir  "#{install_dir}/run/"
   copy 'checks.d', "#{install_dir}/agent/"
   copy 'checks', "#{install_dir}/agent/"
   copy 'dogstream', "#{install_dir}/agent/"
@@ -40,7 +41,6 @@ build do
   copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/paasinsight-cert.pem"
   #这里的证书要修改
 
-  mkdir  '/opt/paas-agent/run/'
 
 
   if linux?
