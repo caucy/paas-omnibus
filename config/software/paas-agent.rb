@@ -24,7 +24,6 @@ build do
   #这里要修改，证书
   # Agent code
   mkdir  "#{install_dir}/agent/"
-<<<<<<< HEAD
   copy 'checks.d', "#{install_dir}/agent/"
   copy 'checks', "#{install_dir}/agent/"
   copy 'dogstream', "#{install_dir}/agent/"
@@ -32,7 +31,6 @@ build do
   copy 'utils', "#{install_dir}/agent/"
   command "cp *.py #{install_dir}/agent/"
   copy 'datadog-cert.pem', "#{install_dir}/agent/"
-=======
   copy '/root/paas-agent/checks.d', "#{install_dir}/agent/"
   copy '/root/paas-agent/checks', "#{install_dir}/agent/"
   copy '/root/paas-agent/dogstream', "#{install_dir}/agent/"
@@ -40,7 +38,6 @@ build do
   copy '/root/paas-agent/utils', "#{install_dir}/agent/"
   command "cp /root/paas-agent/*.py #{install_dir}/agent/"
   copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/paasinsight-cert.pem"
->>>>>>> 3114d50229c969f1b7614cdace9b2ba9a42f10cd
   #这里的证书要修改
 
   mkdir  '/opt/paas-agent/run/'
