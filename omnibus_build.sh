@@ -6,12 +6,12 @@
 #
 ############################
 
-PROJECT_DIR=dd-agent-omnibus
-PROJECT_NAME=datadog-agent
+PROJECT_DIR=paas-agent-omnibus
+PROJECT_NAME=paas-agent
 LOG_LEVEL=${LOG_LEVEL:-"info"}
 export OMNIBUS_BRANCH=${OMNIBUS_BRANCH:-"master"}
 export OMNIBUS_SOFTWARE_BRANCH=${OMNIBUS_SOFTWARE_BRANCH:-"master"}
-export OMNIBUS_RUBY_BRANCH=${OMNIBUS_RUBY_BRANCH:-"datadog-5.5.0"}
+export OMNIBUS_RUBY_BRANCH=${OMNIBUS_RUBY_BRANCH:-"master"}
 
 set -e
 
@@ -19,8 +19,8 @@ set -e
 rm -rf /var/cache/omnibus/pkg/*
 
 # Clean up what we installed
-rm -f /etc/init.d/datadog-agent
-rm -rf /etc/dd-agent
+rm -f /etc/init.d/paas-agent
+rm -rf /etc/paas-agent
 rm -rf /opt/$PROJECT_NAME/*
 
 cd $PROJECT_DIR

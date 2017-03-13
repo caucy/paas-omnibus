@@ -4,9 +4,9 @@ name 'paas-agent'
 
 local_agent_repo = ENV['LOCAL_AGENT_REPO']
 if local_agent_repo.nil? || local_agent_repo.empty?
-  source git: 'https://github.com/whpv/dd-agent.git'
+  source git: 'https://github.com/kexibuaijifen/paas-agent.git'
 else
-  # For local development
+   #For local development
   source path: ENV['LOCAL_AGENT_REPO']
 end
 
@@ -24,6 +24,7 @@ build do
   #这里要修改，证书
   # Agent code
   mkdir  "#{install_dir}/agent/"
+<<<<<<< HEAD
   copy 'checks.d', "#{install_dir}/agent/"
   copy 'checks', "#{install_dir}/agent/"
   copy 'dogstream', "#{install_dir}/agent/"
@@ -31,16 +32,25 @@ build do
   copy 'utils', "#{install_dir}/agent/"
   command "cp *.py #{install_dir}/agent/"
   copy 'datadog-cert.pem', "#{install_dir}/agent/"
+=======
+  copy '/root/paas-agent/checks.d', "#{install_dir}/agent/"
+  copy '/root/paas-agent/checks', "#{install_dir}/agent/"
+  copy '/root/paas-agent/dogstream', "#{install_dir}/agent/"
+  #copy 'resources', "#{install_dir}/agent/"
+  copy '/root/paas-agent/utils', "#{install_dir}/agent/"
+  command "cp /root/paas-agent/*.py #{install_dir}/agent/"
+  copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/paasinsight-cert.pem"
+>>>>>>> 3114d50229c969f1b7614cdace9b2ba9a42f10cd
   #这里的证书要修改
 
-  mkdir "#{install_dir}/run/"
+  mkdir  '/opt/paas-agent/run/'
 
 
   if linux?
     # Configuration files
     mkdir '/etc/paas-agent'
     if redhat?
-      copy 'packaging/centos/paas-agent.init', '/etc/rc.d/init.d/paas-agent'
+      copy '/root/paas-agent/packaging/centos/paas-agent.init', '/etc/rc.d/init.d/paas-agent'
     end
 
     if suse? || debian?
@@ -51,21 +61,24 @@ build do
         sys_type = 'suse'
         systemd_directory = '/usr/lib/systemd/system'
       end
-      copy "packaging/#{sys_type}/paas-agent.init", '/etc/init.d/paas-agent'
+      copy "/root/paas-agent/packaging/#{sys_type}/paas-agent.init", '/etc/init.d/paas-agent'
       mkdir systemd_directory
-      copy 'packaging/debian/paas-agent.service', "#{systemd_directory}/paas-agent.service"
-      copy 'packaging/debian/start_agent.sh', '/opt/paas-agent/bin/start_agent.sh'
+      copy '/root/paas-agent/packaging/debian/paas-agent.service', "#{systemd_directory}/paas-agent.service"
+      copy '/root/paas-agent/packaging/debian/start_agent.sh', '/opt/paas-agent/bin/start_agent.sh'
       command 'chmod 755 /opt/paas-agent/bin/start_agent.sh'
     end
 
     # Use a supervisor conf with go-metro on 64-bit platforms only
     if ohai['kernel']['machine'] == 'x86_64'
-      copy 'packaging/supervisor.conf', '/etc/paas-agent/supervisor.conf'
+      copy '/root/paas-agent/packaging/supervisor.conf', '/etc/paas-agent/supervisor.conf'
     else
-      copy 'packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
+      copy '/root/paas-agent/packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
     end
-    copy 'paasinsight.conf.example', '/etc/paasinsight-agent/paas.conf.example'
-    copy 'conf.d', '/etc/paas-agent/'
+<<<<<<< HEAD
+=======
+    copy '/root/paas-agent/paasinsight.conf.example', '/etc/paas-agent/paasinsight.conf.example'
+    copy '/root/paas-agent/conf.d', '/etc/paas-agent/'
+>>>>>>> 3114d50229c969f1b7614cdace9b2ba9a42f10cd
     mkdir '/etc/paas-agent/checks.d/'
     command 'chmod 755 /etc/init.d/paas-agent'
     touch '/usr/bin/paas-agent'
@@ -90,15 +103,15 @@ build do
                       ' @executable_path/../Frameworks/libpyside-python2.7.1.2.dylib '
 
     # Command line tool
-    copy 'packaging/osx/paas-agent', "#{install_dir}/bin"
+    copy '/root/paas-agent/packaging/osx/paas-agent', "#{install_dir}/bin"
     command "chmod 755 #{install_dir}/bin/paas-agent"
 
     # GUI
-    copy 'packaging/paas-agent/win32/install_files/guidata/images', "#{install_dir}/agent"
-    copy 'win32/gui.py', "#{install_dir}/agent"
-    copy 'win32/status.html', "#{install_dir}/agent"
+    copy '/root/paas-agent/packaging/paas-agent/win32/install_files/guidata/images', "#{install_dir}/agent"
+    copy '/root/paas-agent/win32/gui.py', "#{install_dir}/agent"
+    copy '/root/paas-agent/win32/status.html', "#{install_dir}/agent"
     mkdir "#{install_dir}/agent/packaging"
-    copy 'packaging/osx/app/*', "#{install_dir}/agent/packaging"
+    copy '/root/paas-agent/packaging/osx/app/*', "#{install_dir}/agent/packaging"
 
     command "cd #{install_dir}/agent && "\
             "#{install_dir}/embedded/bin/python #{install_dir}/agent/setup.py py2app"\
