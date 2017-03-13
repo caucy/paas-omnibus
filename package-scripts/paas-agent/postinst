@@ -15,7 +15,7 @@ error_exit()
 mkdir -p ${LOG_DIR} || error_exit "Cannot create ${LOG_DIR}!"
 
 # If we are inside the Docker container, do nothing
-if [ -n "$DOCKER_PASS_AGENT" ]; then
+if [ -n "$DOCKER_PAAS_AGENT" ]; then
   echo "Installation from docker-paas-agent, nothing to do in postinst"
   exit 0
 fi
@@ -69,11 +69,11 @@ if [ "$DISTRIBUTION" != "Darwin" ]; then
   # Set proper rights to the paas-agent user
   chown -R paas-agent:root ${CONFIG_DIR}
   chown -R paas-agent:root ${LOG_DIR}
-  chown root:root /etc/init.d/pass-agent
+  chown root:root /etc/init.d/paas-agent
   chown -R paas-agent:paas-agent ${INSTALL_DIR}
 
   if command -v chkconfig >/dev/null 2>&1; then
-      chkconfig --add pass-agent
+      chkconfig --add paas-agent
   fi
 
   # Create symlinks to the various agent's components
@@ -88,10 +88,10 @@ if [ "$DISTRIBUTION" != "Darwin" ]; then
   # did its job and exist zero, otherwise, if the file exists but it's wrong we
   # have to return a non zero exit status so that the system (and the user) are
   # notified the installation went wrong.
-  /etc/init.d/pass-agent configcheck > /dev/null 2>&1
+  /etc/init.d/paas-agent configcheck > /dev/null 2>&1
   RETVAL=$?
   if [ $RETVAL -eq 0 ]; then
-      echo "(Re)starting passinsight-agent now..."
+      echo "(Re)starting paasinsight-agent now..."
       if command -v invoke-rc.d >/dev/null 2>&1; then
           invoke-rc.d paas-agent restart
       else
