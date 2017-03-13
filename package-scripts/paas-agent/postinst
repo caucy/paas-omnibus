@@ -183,7 +183,7 @@ elif [ "$DISTRIBUTION" = "Darwin" ]; then
   USER_HOME=`sudo -Hu $INSTALL_USER sh -c 'echo $HOME'`
   sudo -Hu $INSTALL_USER mkdir -vp "$USER_HOME/.paas-agent"
   rm -vf "$USER_HOME/.paas-agent/conf.d" "$USER_HOME/.paas-agent/paas.conf" "$USER_HOME/.paas-agent/checks.d"
-  sudo -Hu $INSTALL_USER ln -vs $CONF_DIR/conf.d "$USER_HOME/.paaas-agent/conf.d"
+  sudo -Hu $INSTALL_USER ln -vs $CONF_DIR/conf.d "$USER_HOME/.paas-agent/conf.d"
   sudo -Hu $INSTALL_USER ln -vs $CONF_DIR/paasinsight.conf "$USER_HOME/.paas-agent/paasinsight.conf"
   sudo -Hu $INSTALL_USER ln -vs $CONF_DIR/checks.d "$USER_HOME/.paas-agent/checks.d"
 
