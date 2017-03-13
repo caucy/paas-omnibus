@@ -33,7 +33,7 @@ build do
   copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/"
   #这里的证书要修改
 
-  mkdir "#{install_dir}/run/"
+  mkdir -p "#{install_dir}/run/"
 
 
   if linux?
