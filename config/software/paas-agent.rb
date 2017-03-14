@@ -38,7 +38,7 @@ build do
   #copy 'resources', "#{install_dir}/agent/"
   copy '/root/paas-agent/utils', "#{install_dir}/agent/"
   command "cp /root/paas-agent/*.py #{install_dir}/agent/"
-  copy '/root/paas-agent/datadog-cert.pem', "#{install_dir}/agent/paasinsight-cert.pem"
+  copy '/root/paas-agent/paasinsight-cert.pem', "#{install_dir}/agent/paasinsight-cert.pem"
   #这里的证书要修改
 
 
