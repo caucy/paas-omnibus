@@ -71,11 +71,8 @@ build do
     else
       copy '/root/paas-agent/packaging/supervisor_32.conf', '/etc/paas-agent/supervisor.conf'
     end
-<<<<<<< HEAD
-=======
     copy '/root/paas-agent/paasinsight.conf.example', '/etc/paas-agent/paasinsight.conf.example'
     copy '/root/paas-agent/conf.d', '/etc/paas-agent/'
->>>>>>> 3114d50229c969f1b7614cdace9b2ba9a42f10cd
     mkdir '/etc/paas-agent/checks.d/'
     command 'chmod 755 /etc/init.d/paas-agent'
     touch '/usr/bin/paas-agent'
