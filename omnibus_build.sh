@@ -9,10 +9,8 @@
 PROJECT_DIR=paas-agent-omnibus
 PROJECT_NAME=paas-agent
 LOG_LEVEL=${LOG_LEVEL:-"info"}
-export OMNIBUS_BRANCH=${OMNIBUS_BRANCH:-"master"}
-export OMNIBUS_SOFTWARE_BRANCH=${OMNIBUS_SOFTWARE_BRANCH:-"master"}
-export OMNIBUS_RUBY_BRANCH=${OMNIBUS_RUBY_BRANCH:-"master"}
 
+cd PROJECT_DIR
 set -e
 
 # Clean up omnibus artifacts
