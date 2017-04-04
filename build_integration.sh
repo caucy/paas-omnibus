@@ -6,7 +6,7 @@
 #
 ############################
 
-PROJECT_DIR='/dd-agent-omnibus'
+PROJECT_DIR='/paas-agent-omnibus'
 
 cd $PROJECT_DIR
 git fetch --all
